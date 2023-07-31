@@ -5,6 +5,8 @@ from mysql.connector import Error
 import datetime
 
 
+
+
 def save_record():
     name = name_entry.get()
     email = email_entry.get()
@@ -161,7 +163,7 @@ window.configure(bg="#f0f0f0")
 # Create labels and entry fields
 name_label = tk.Label(window, text="Name:", bg="#f0f0f0")
 name_label.pack()
-name_entry = tk.Entry(window, width=30)
+name_entry = ttk.Entry(window, width=30)
 name_entry.pack(pady=5)
 
 email_label = tk.Label(window, text="Email:", bg="#f0f0f0")
@@ -216,30 +218,55 @@ activity_label.pack()
 activity_dropdown = tk.OptionMenu(window, activity_var, *activities)
 activity_dropdown.pack(pady=5)
 
-# Accounts dropdown
-accounts = ["N/A",
-            "CHARLY",
-            "GOLDEN LIGHTING",
-            "JUST ACCESS",
-            "MDB",
-            "NAKED WOLFE",
-            "PARAVEL",
-            "TRU GRIT",
-            "AXION",
-            "DUNDY",
-            "EJAM",
-            "HAMMIT",
-            "LOLA GETS",
-            "PHONESOAP",
-            "PINNACLE",
-            "SUTERA",
-            "UNCHARTED",
-            "XCEL",
-            "ZOIC",
-            "WCO",
-            "FAMOSA",
-            "ANTLER",
-            "RECIBOS"]  # Replace with your actual accounts
+accounts = [
+    "N/A",
+    "ACRONYM LLC",
+    "AMANI ENTERPRISES LLC",
+    "ATR BRANDS LIMITED",
+    "AXION LLC",
+    "BEXCO ENTERPRISES INC",
+    "BUTTERCUP BODYWEAR INC",
+    "CHARLY USA LLC",
+    "DECKED LLC",
+    "EJAM INC",
+    "ERUSI APLICACIONES SA DE CV",
+    "FAMOSA NORTH AMERICA INC",
+    "GOLDEN DRAGON ASSOCIATION INCDBA GOLDEN LIGHTING",
+    "HAMMITT INC",
+    "JEG HOLDCO LLC",
+    "JUST ACCESS INC",
+    "LOLA GETS INC",
+    "NAKED WOLFE LIMITED",
+    "OTG SURPLUS LLC",
+    "PARAVEL INC",
+    "PHONESOAP LLC",
+    "PINNACLE BRAND GROUP INC",
+    "TRU GRIT FITNESS LLC",
+    "UNCHARTED SUPPLY COMPANY",
+    "XCEL BRANDS INC",
+    "ZOIC",
+    "THIRTY THREE THREADS INC",
+    "ARRIS GROUP DE MEXICO SA DE CV",
+    "EWS S DE RL DE CV",
+    "MEDTRONIC",
+    "SPRINGS WINDOW FASHIONS",
+    "WALKING COMPANY",
+    "MEDLINE",
+    "LEGRAND",
+    "RECIBOS"
+]
+
+
+
+
+
+
+
+
+
+
+
+
 
 account_var = tk.StringVar(window)
 account_var.set(accounts[0])  # Set the default selected account
