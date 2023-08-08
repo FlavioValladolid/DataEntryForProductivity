@@ -9,13 +9,12 @@ import datetime
 
 def save_record():
     name = name_entry.get()
-    email = email_entry.get()
     account = account_var.get()
     activity = activity_var.get()
     start = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     # Check if all input fields are filled
-    if name == "" or email == "" or account == "" or activity == "":
+    if name == "" or account == "" or activity == "":
         messagebox.showerror("Error", "Please fill in all fields.")
         return
 
@@ -41,7 +40,7 @@ def save_record():
                 connection.commit()
 
             # Get the ID and start time of the last record with the same name and same day
-            query = "SELECT id, start FROM data_entry WHERE name = %s AND DATE(start) = DATE(%s) ORDER BY id DESC LIMIT 1"
+            query = "SELECT id, start FROM data_entry WHERE servant_number = %s AND DATE(start) = DATE(%s) ORDER BY id DESC LIMIT 1"
             cursor.execute(query, (name, start))
             result = cursor.fetchone()
             if result:
@@ -56,8 +55,8 @@ def save_record():
                 connection.commit()
 
             # Create a new record in the table
-            insert_query = "INSERT INTO data_entry (name, email, account, start, `end`, activity, diff) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            values = (name, email, account, start, '0', activity, 0)
+            insert_query = "INSERT INTO data_entry (servant_number, account, start, `end`, activity, diff) VALUES (%s, %s, %s, %s, %s, %s)"
+            values = (name, account, start, '0', activity, 0)
             cursor.execute(insert_query, values)
             connection.commit()
 
@@ -65,7 +64,6 @@ def save_record():
 
             # Reset the input fields
             name_entry.delete(0, tk.END)
-            email_entry.delete(0, tk.END)
             account_var.set(accounts[0])
             activity_var.set(activities[0])
 
@@ -148,7 +146,7 @@ def save_records_to_csv(records, filename):
     import csv
     with open(filename, 'w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["ID", "Name", "Email", "Account", "Start","Activity", "End","Diff(s)"])
+        writer.writerow(["ID", "Name", "Account", "Start","Activity", "End","Diff(s)"])
         writer.writerows(records)
     messagebox.showinfo("CSV Saved", f"The CSV file '{filename}' has been saved successfully.")
 
@@ -157,19 +155,14 @@ window = tk.Tk()
 window.title("Data Entry Form")
 
 # Styling options
-window.geometry("400x500")
+window.geometry("450x500")
 window.configure(bg="#f0f0f0")
 
 # Create labels and entry fields
-name_label = tk.Label(window, text="Name:", bg="#f0f0f0")
+name_label = tk.Label(window, text="Número de Servidor:", bg="#f0f0f0")
 name_label.pack()
 name_entry = ttk.Entry(window, width=30)
 name_entry.pack(pady=5)
-
-email_label = tk.Label(window, text="Email:", bg="#f0f0f0")
-email_label.pack()
-email_entry = tk.Entry(window, width=30)
-email_entry.pack(pady=5)
 
 # Activities dropdown
 activities = ["Receiving",
@@ -213,7 +206,7 @@ activities = ["Receiving",
 
 activity_var = tk.StringVar(window)
 activity_var.set(activities[0])  # Set the default selected activity
-activity_label = tk.Label(window, text="Activity:", bg="#f0f0f0")
+activity_label = tk.Label(window, text="Nombre de Actividad:", bg="#f0f0f0")
 activity_label.pack()
 activity_dropdown = tk.OptionMenu(window, activity_var, *activities)
 activity_dropdown.pack(pady=5)
@@ -270,7 +263,7 @@ accounts = [
 
 account_var = tk.StringVar(window)
 account_var.set(accounts[0])  # Set the default selected account
-account_label = tk.Label(window, text="Account:", bg="#f0f0f0")
+account_label = tk.Label(window, text="Cuenta:", bg="#f0f0f0")
 account_label.pack()
 account_dropdown = tk.OptionMenu(window, account_var, *accounts)
 account_dropdown.pack(pady=5)
@@ -285,43 +278,43 @@ tab_control = tk.Tk()
 tab_control = ttk.Notebook(window)
 
 same_day_tab = tk.Frame(tab_control)
-tab_control.add(same_day_tab, text="Current Day")
+tab_control.add(same_day_tab, text="Reporte de día actual")
 
 same_week_tab = tk.Frame(tab_control)
-tab_control.add(same_week_tab, text="Current Week")
+tab_control.add(same_week_tab, text="Reporte de la semana actual")
 
 range_of_dates_tab = tk.Frame(tab_control)
-tab_control.add(range_of_dates_tab, text="Range of Dates")
+tab_control.add(range_of_dates_tab, text="Reporte por rango de fechas")
 
 # Same Day Tab
-same_day_label = tk.Label(same_day_tab, text="Download CSV for the Current Day", bg="#f0f0f0")
+same_day_label = tk.Label(same_day_tab, text="Descargar CSV", bg="#f0f0f0")
 same_day_label.pack(pady=5)
 
-same_day_button = tk.Button(same_day_tab, text="Download CSV", command=download_same_day_csv)
+same_day_button = tk.Button(same_day_tab, text="Descargar CSV", command=download_same_day_csv)
 same_day_button.pack(pady=5)
 
 # Same Week Tab
-same_week_label = tk.Label(same_week_tab, text="Download CSV for the Current Week", bg="#f0f0f0")
+same_week_label = tk.Label(same_week_tab, text="Descargar CSV", bg="#f0f0f0")
 same_week_label.pack(pady=5)
 
-same_week_button = tk.Button(same_week_tab, text="Download CSV", command=download_same_week_csv)
+same_week_button = tk.Button(same_week_tab, text="Descargar CSV", command=download_same_week_csv)
 same_week_button.pack(pady=5)
 
 # Range of Dates Tab
-range_of_dates_label = tk.Label(range_of_dates_tab, text="Download CSV for a Range of Dates", bg="#f0f0f0")
+range_of_dates_label = tk.Label(range_of_dates_tab, text="Descargar CSV", bg="#f0f0f0")
 range_of_dates_label.pack(pady=5)
 
-start_date_label = tk.Label(range_of_dates_tab, text="Start Date (YYYY-MM-DD):", bg="#f0f0f0")
+start_date_label = tk.Label(range_of_dates_tab, text="Fecha Inicial (YYYY-MM-DD):", bg="#f0f0f0")
 start_date_label.pack()
 start_date_entry = tk.Entry(range_of_dates_tab, width=30)
 start_date_entry.pack(pady=5)
 
-end_date_label = tk.Label(range_of_dates_tab, text="End Date (YYYY-MM-DD):", bg="#f0f0f0")
+end_date_label = tk.Label(range_of_dates_tab, text="Fecha Final (YYYY-MM-DD):", bg="#f0f0f0")
 end_date_label.pack()
 end_date_entry = tk.Entry(range_of_dates_tab, width=30)
 end_date_entry.pack(pady=5)
 
-range_of_dates_button = tk.Button(range_of_dates_tab, text="Download CSV", command=download_range_of_dates_csv)
+range_of_dates_button = tk.Button(range_of_dates_tab, text="Descargar CSV", command=download_range_of_dates_csv)
 range_of_dates_button.pack(pady=5)
 
 # Add tabs to the window
@@ -333,3 +326,5 @@ tab_control.pack(expand=1, fill="both")
 
 # Start the main GUI loop
 window.mainloop()
+
+
