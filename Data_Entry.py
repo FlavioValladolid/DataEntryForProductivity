@@ -246,6 +246,8 @@ accounts = [
     "WALKING COMPANY",
     "MEDLINE",
     "LEGRAND",
+    "PORTLAND PRODUCT WERKS LLC",
+    "PHOENIX FOOTWEAR GROUP INC",
     "RECIBOS"
 ]
 
